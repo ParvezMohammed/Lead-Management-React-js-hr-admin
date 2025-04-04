@@ -8,10 +8,6 @@ import { Navbar } from "./Navbar";
 
 const ManageAccountActivation = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState("all");
-  const [selectedStatus, setSelectedStatus] = useState("all");
-  const [selectedEmployees, setSelectedEmployees] = useState([]);
-
   const [employees, setEmployees] = useState([
     {
       id: "EMP003",
@@ -28,14 +24,6 @@ const ManageAccountActivation = () => {
       joinDate: "2024-02-19",
       status: "Active",
       avatar: "https://randomuser.me/api/portraits/men/6.jpg",
-    },
-    {
-      id: "EMP007",
-      name: "Sarah Johnson",
-      department: "Marketing",
-      joinDate: "2024-02-20",
-      status: "Pending",
-      avatar: "https://randomuser.me/api/portraits/women/4.jpg",
     },
   ]);
 
@@ -57,114 +45,35 @@ const ManageAccountActivation = () => {
     },
   ]);
 
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedEmployees(filteredEmployees.map(emp => emp.id));
-    } else {
-      setSelectedEmployees([]);
-    }
-  };
-
-  const handleSelectEmployee = (empId) => {
-    if (selectedEmployees.includes(empId)) {
-      setSelectedEmployees(selectedEmployees.filter(id => id !== empId));
-    } else {
-      setSelectedEmployees([...selectedEmployees, empId]);
-    }
-  };
-
-  const handleBatchActivate = () => {
-    if (selectedEmployees.length === 0) {
-      alert("Please select employees to activate");
-      return;
-    }
-
-    const updatedEmployees = employees.map(emp => {
-      if (selectedEmployees.includes(emp.id)) {
-        return { ...emp, status: "Active" };
-      }
-      return emp;
-    });
-
-    // Add to recent activities
-    const newActivity = {
-      action: `Batch activation completed`,
-      employee: `${selectedEmployees.length} employees`,
-      icon: <BsCheckCircleFill className="text-green-500 text-lg" />,
-    };
-
-    setEmployees(updatedEmployees);
-    setRecentActivities([newActivity, ...recentActivities]);
-    setSelectedEmployees([]);
-  };
-
-  const handleSendEmails = () => {
-    if (selectedEmployees.length === 0) {
-      alert("Please select employees to send emails");
-      return;
-    }
-
-    // Add to recent activities
-    const newActivity = {
-      action: "Batch email sent",
-      employee: `${selectedEmployees.length} employees`,
-      icon: <IoMdMail className="text-blue-500 text-lg" />,
-    };
-
-    setRecentActivities([newActivity, ...recentActivities]);
-    alert(`Activation emails sent to ${selectedEmployees.length} employees`);
-  };
-
-  const filteredEmployees = employees.filter(emp => {
-    const matchesSearch = emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         emp.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDepartment = selectedDepartment === "all" || emp.department === selectedDepartment;
-    const matchesStatus = selectedStatus === "all" || emp.status === selectedStatus;
-    return matchesSearch && matchesDepartment && matchesStatus;
-  });
-
-  const stats = {
-    pendingActivation: employees.filter(emp => emp.status === "Pending").length,
-    activatedToday: employees.filter(emp => emp.status === "Active").length,
-    failedActivation: 3,
-    totalActive: employees.filter(emp => emp.status === "Active").length,
-  };
-
   return (
     <div className="mb-8 min-h-screen">
       <Navbar heading="Account Management" />
 
+      {/* Dashboard Cards */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {[
           {
             title: "Pending Activation",
-            count: stats.pendingActivation,
-            color: "text-blue-500",
+            count: employees.filter((emp) => emp.status === "Pending").length,
             icon: <MdGroupAdd className="text-2xl text-blue-500" />,
           },
           {
             title: "Activated Today",
-            count: stats.activatedToday,
-            color: "text-green-500",
+            count: employees.filter((emp) => emp.status === "Active").length,
             icon: <FaUserCheck className="text-2xl text-green-500" />,
           },
           {
             title: "Failed Activation",
-            count: stats.failedActivation,
-            color: "text-red-500",
+            count: 3,
             icon: <FaUserTimes className="text-2xl text-red-500" />,
           },
           {
             title: "Total Active Employee",
-            count: stats.totalActive,
-            color: "text-purple-500",
+            count: employees.filter((emp) => emp.status === "Active").length,
             icon: <HiUserGroup className="text-2xl text-purple-500" />,
           },
         ].map((item, idx) => (
-          <div
-            key={idx}
-            className="p-4 border rounded-md flex items-center gap-4 bg-white shadow-md"
-          >
+          <div key={idx} className="p-4 border rounded-md flex items-center gap-4 bg-white shadow-md">
             <div>{item.icon}</div>
             <div>
               <p className="text-gray-600">{item.title}</p>
@@ -174,7 +83,8 @@ const ManageAccountActivation = () => {
         ))}
       </div>
 
-      <div className="bg-white p-6 rounded-md mb-6 shadow-md">
+      {/* Employee Account Activation Table */}
+      <div className="bg-white p-6 rounded-md mb-6 shadow-md border border-gray-300">
         <h3 className="font-semibold mb-4">Employee Account Activation</h3>
         <p className="text-sm text-gray-500 mb-4">
           Manage pending account activations for new employees
@@ -188,76 +98,23 @@ const ManageAccountActivation = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <select
-            value={selectedDepartment}
-            onChange={(e) => setSelectedDepartment(e.target.value)}
-            className="p-2 border rounded-md"
-          >
-            <option value="all">All Departments</option>
-            <option value="Development">Development</option>
-            <option value="Design">Design</option>
-            <option value="Marketing">Marketing</option>
-          </select>
-          <select
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="p-2 border rounded-md"
-          >
-            <option value="all">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Active">Active</option>
-          </select>
-        </div>
-
-        <div className="flex gap-3 mb-4">
-          <button
-            onClick={handleBatchActivate}
-            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors flex items-center gap-2"
-          >
-            <FaUserCheck /> Batch Activate
-          </button>
-          <button
-            onClick={handleSendEmails}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors flex items-center gap-2"
-          >
-            <IoMdMail /> Send Activation Emails
-          </button>
         </div>
 
         <table className="w-full border-collapse border border-gray-300 bg-white">
           <thead>
             <tr className="bg-gray-100">
-              <th className="p-3 text-left">
-                <input
-                  type="checkbox"
-                  checked={selectedEmployees.length === filteredEmployees.length}
-                  onChange={handleSelectAll}
-                  className="rounded"
-                />
-              </th>
               <th className="p-3 text-left">Employee Name</th>
               <th className="p-3 text-left">Department</th>
               <th className="p-3 text-left">Join Date</th>
               <th className="p-3 text-left">Status</th>
+              <th className="p-3 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
-            {filteredEmployees.map((emp) => (
+            {employees.map((emp) => (
               <tr key={emp.id} className="border-t">
-                <td className="p-3">
-                  <input
-                    type="checkbox"
-                    checked={selectedEmployees.includes(emp.id)}
-                    onChange={() => handleSelectEmployee(emp.id)}
-                    className="rounded"
-                  />
-                </td>
                 <td className="p-3 flex items-center gap-2">
-                  <img
-                    src={emp.avatar}
-                    alt={emp.name}
-                    className="w-8 h-8 rounded-full"
-                  />
+                  <img src={emp.avatar} alt={emp.name} className="w-8 h-8 rounded-full" />
                   <div>
                     <p className="font-medium">{emp.name}</p>
                     <p className="text-sm text-gray-500">{emp.id}</p>
@@ -268,13 +125,21 @@ const ManageAccountActivation = () => {
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 rounded-full text-sm ${
-                      emp.status === "Active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-yellow-100 text-yellow-800"
+                      emp.status === "Active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                     }`}
                   >
                     {emp.status}
                   </span>
+                </td>
+                <td className="p-3">
+                  {emp.status === "Pending" ? (
+                    <div className="flex gap-2">
+                      <button className="px-3 py-1 text-white bg-blue-500 rounded">Active</button>
+                      <button className="px-3 py-1 text-white bg-red-500 rounded">Reject</button>
+                    </div>
+                  ) : (
+                    <span className="text-green-600 font-semibold">Activated</span>
+                  )}
                 </td>
               </tr>
             ))}
@@ -282,21 +147,20 @@ const ManageAccountActivation = () => {
         </table>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-lg font-semibold mb-4">Recent Activities</h3>
-        <div className="space-y-4">
-          {recentActivities.map((activity, index) => (
-            <div key={index} className="flex items-center space-x-3 border-b pb-3">
+      {/* Recent Activity Log */}
+      <div className="bg-white p-6 rounded-md shadow-md border">
+        <h3 className="font-semibold mb-4">Recent Activity Log</h3>
+        <ul className="space-y-3">
+          {recentActivities.map((activity, idx) => (
+            <li key={idx} className="flex items-center gap-3 text-gray-700">
               {activity.icon}
-              <div>
-                <p className="text-sm font-medium">
-                  {activity.action}
-                  {activity.employee && `: ${activity.employee}`}
-                </p>
-              </div>
-            </div>
+              <span>
+                {activity.action}{" "}
+                {activity.employee && <strong>{activity.employee}</strong>}
+              </span>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   );

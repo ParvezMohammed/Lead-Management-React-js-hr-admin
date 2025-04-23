@@ -142,7 +142,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Authors
 
-- Your Name - Initial work
+- Parvez Mohammed
 
 ## 🙏 Acknowledgments
 
@@ -150,7 +150,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by modern HR management systems
 - Built with best practices in mind
 
-## 📞 Support
-
-For support, email support@leadmanagement.com or create an issue in the repository.
 

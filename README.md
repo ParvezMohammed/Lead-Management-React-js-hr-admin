@@ -61,19 +61,6 @@ A modern and efficient Lead Management System designed to streamline employee ma
 - **ESLint** - Code linting
 - **Prettier** - Code formatting
 
-## 📦 Project Structure
-
-```
-src/
-├── components/         # React components
-├── pages/             # Page components
-├── context/           # Context providers
-├── hooks/             # Custom hooks
-├── utils/             # Utility functions
-├── assets/            # Static assets
-└── styles/            # Global styles
-```
-
 ## 🚀 Getting Started
 
 1. Clone the repository:
@@ -92,7 +79,7 @@ src/
    npm start
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+4. Open [http://localhost:(portname)](http://localhost:(portname)) to view it in your browser.
 
 ## 🔧 Configuration
 

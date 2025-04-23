@@ -12,7 +12,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: "Dashboard", icon: <RxDashboard size={20} />, path: "/" },
-    { name: "Employee Onboarding", icon: <HiOutlineUserGroup size={20} />, path: "/employee-onboarding" },
+    { name: "Employee Onboarding", icon: <HiOutlineUserGroup size={17} />, path: "/employee-onboarding" },
     { name: "Manage Account", icon: <FiBriefcase size={20} />, path: "/manage-account" },
     { name: "Manage Work", icon: <FaTasks size={20} />, path: "/manage-work" },
     { name: "Settings", icon: <CiSettings size={30} />, path: "/setting" },
@@ -22,8 +22,8 @@ const Sidebar = () => {
     <div className="h-full p-6">
       {/* Logo */}
       <div className="flex items-center gap-3 mb-12">
-        <div className="w-10 h-10 bg-blue-400 rounded-lg flex items-center justify-center">
-          <FaRegUserCircle className="text-white text-2xl" />
+        <div className="flex items-center justify-center">
+          <img src="/src/assets/hrms-logo.png" alt="HRMS Logo" className="w-8 h-8 rounded-full" />
         </div>
         <h2 className="text-xl font-bold text-black">HRMS</h2>
       </div>

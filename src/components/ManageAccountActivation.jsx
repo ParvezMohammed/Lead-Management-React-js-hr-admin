@@ -12,49 +12,59 @@ const ManageAccountActivation = () => {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedEmployees, setSelectedEmployees] = useState([]);
 
+  // Dummy employees data
   const [employees, setEmployees] = useState([
     {
-      id: "EMP003",
-      name: "Darlene Robertson",
+      id: "EMP001",
+      name: "John Smith",
       department: "Development",
-      joinDate: "2024-02-15",
+      joinDate: "2024-03-15",
       status: "Pending",
-      avatar: "https://randomuser.me/api/portraits/women/3.jpg",
+      avatar: "https://randomuser.me/api/portraits/men/1.jpg"
     },
     {
-      id: "EMP006",
-      name: "Marvin McKinney",
-      department: "Design",
-      joinDate: "2024-02-19",
-      status: "Active",
-      avatar: "https://randomuser.me/api/portraits/men/6.jpg",
-    },
-    {
-      id: "EMP007",
+      id: "EMP002",
       name: "Sarah Johnson",
-      department: "Marketing",
-      joinDate: "2024-02-20",
-      status: "Pending",
-      avatar: "https://randomuser.me/api/portraits/women/4.jpg",
+      department: "Design",
+      joinDate: "2024-03-14",
+      status: "Active",
+      avatar: "https://randomuser.me/api/portraits/women/2.jpg"
     },
+    {
+      id: "EMP003",
+      name: "Michael Brown",
+      department: "Marketing",
+      joinDate: "2024-03-13",
+      status: "Pending",
+      avatar: "https://randomuser.me/api/portraits/men/3.jpg"
+    },
+    {
+      id: "EMP004",
+      name: "Emily Davis",
+      department: "Development",
+      joinDate: "2024-03-12",
+      status: "Pending",
+      avatar: "https://randomuser.me/api/portraits/women/4.jpg"
+    }
   ]);
 
+  // Dummy recent activities data
   const [recentActivities, setRecentActivities] = useState([
     {
       action: "Account activation failed",
       employee: "Sarah Johnson",
-      icon: <BsXCircleFill className="text-red-500 text-lg" />,
+      icon: <BsXCircleFill className="text-red-500 text-lg" />
     },
     {
       action: "Account activated",
       employee: "John Smith",
-      icon: <BsCheckCircleFill className="text-green-500 text-lg" />,
+      icon: <BsCheckCircleFill className="text-green-500 text-lg" />
     },
     {
       action: "Batch email sent to 5 pending employees",
       employee: "",
-      icon: <IoMdMail className="text-blue-500 text-lg" />,
-    },
+      icon: <IoMdMail className="text-blue-500 text-lg" />
+    }
   ]);
 
   const handleSelectAll = (e) => {
@@ -90,7 +100,7 @@ const ManageAccountActivation = () => {
     const newActivity = {
       action: `Batch activation completed`,
       employee: `${selectedEmployees.length} employees`,
-      icon: <BsCheckCircleFill className="text-green-500 text-lg" />,
+      icon: <BsCheckCircleFill className="text-green-500 text-lg" />
     };
 
     setEmployees(updatedEmployees);
@@ -108,7 +118,7 @@ const ManageAccountActivation = () => {
     const newActivity = {
       action: "Batch email sent",
       employee: `${selectedEmployees.length} employees`,
-      icon: <IoMdMail className="text-blue-500 text-lg" />,
+      icon: <IoMdMail className="text-blue-500 text-lg" />
     };
 
     setRecentActivities([newActivity, ...recentActivities]);
@@ -127,7 +137,7 @@ const ManageAccountActivation = () => {
     pendingActivation: employees.filter(emp => emp.status === "Pending").length,
     activatedToday: employees.filter(emp => emp.status === "Active").length,
     failedActivation: 3,
-    totalActive: employees.filter(emp => emp.status === "Active").length,
+    totalActive: employees.filter(emp => emp.status === "Active").length
   };
 
   return (
@@ -140,26 +150,26 @@ const ManageAccountActivation = () => {
             title: "Pending Activation",
             count: stats.pendingActivation,
             color: "text-blue-500",
-            icon: <MdGroupAdd className="text-2xl text-blue-500" />,
+            icon: <MdGroupAdd className="text-2xl text-blue-500" />
           },
           {
             title: "Activated Today",
             count: stats.activatedToday,
             color: "text-green-500",
-            icon: <FaUserCheck className="text-2xl text-green-500" />,
+            icon: <FaUserCheck className="text-2xl text-green-500" />
           },
           {
             title: "Failed Activation",
             count: stats.failedActivation,
             color: "text-red-500",
-            icon: <FaUserTimes className="text-2xl text-red-500" />,
+            icon: <FaUserTimes className="text-2xl text-red-500" />
           },
           {
             title: "Total Active Employee",
             count: stats.totalActive,
             color: "text-purple-500",
-            icon: <HiUserGroup className="text-2xl text-purple-500" />,
-          },
+            icon: <HiUserGroup className="text-2xl text-purple-500" />
+          }
         ].map((item, idx) => (
           <div
             key={idx}

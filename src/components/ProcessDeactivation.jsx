@@ -1,49 +1,60 @@
 import { useState } from "react";
-import { FaSearch, FaBell, FaCog } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { HiOutlineTrash, HiOutlinePencil } from "react-icons/hi";
 import { FaPlay } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from "./Navbar";
 
 const ProcessDeactivation = () => {
-  const navigate = useNavigate(); // Initialize navigate function
-  const handleStartProcess = () => {
-    navigate("/employee-deactivation");
-  };
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  // Dummy employees data
   const [employees, setEmployees] = useState([
     {
-      id: "EMP001",
-      name: "Ram Mahish",
-      department: "Marketing",
-      lastWorkingDate: "2024-02-28",
-      status: "In Progress",
-      priority: "60%",
-      profilePic: "https://randomuser.me/api/portraits/men/1.jpg",
+      _id: "1",
+      employeeId: "EMP001",
+      fullName: "John Smith",
+      department: "Development",
+      joinDate: "2024-03-15",
+      status: "Pending",
+      priority: "High",
+      profilePic: "https://randomuser.me/api/portraits/men/1.jpg"
     },
     {
-      id: "EMP004",
-      name: "Ankush Singh",
-      department: "IT",
-      lastWorkingDate: "2024-02-20",
-      status: "Completed",
+      _id: "2",
+      employeeId: "EMP002",
+      fullName: "Sarah Johnson",
+      department: "Design",
+      joinDate: "2024-03-14",
+      status: "In Progress",
       priority: "Medium",
-      profilePic: "https://randomuser.me/api/portraits/men/2.jpg",
+      profilePic: "https://randomuser.me/api/portraits/women/2.jpg"
     },
+    {
+      _id: "3",
+      employeeId: "EMP003",
+      fullName: "Michael Brown",
+      department: "Marketing",
+      joinDate: "2024-03-13",
+      status: "Pending",
+      priority: "High",
+      profilePic: "https://randomuser.me/api/portraits/men/3.jpg"
+    }
   ]);
 
+  // Dummy notes data
   const [notes, setNotes] = useState([
     {
       author: "Rashmika (HR)",
       time: "2 hours ago",
-      comment:
-        "Employee has returned all company assets. Pending final clearance from IT department.",
+      comment: "Employee has returned all company assets. Pending final clearance from IT department."
     },
     {
       author: "John Anderson",
       time: "5 hours ago",
-      comment: "Email account deactivation completed for Sarah Johnson.",
-    },
+      comment: "Email account deactivation completed for Sarah Johnson."
+    }
   ]);
 
   const [newNote, setNewNote] = useState("");
@@ -56,7 +67,6 @@ const ProcessDeactivation = () => {
 
   return (
     <div className="mb-8 min-h-screen">
-      {/* Header */}
       <Navbar heading="Employee Deactivation Management" />
 
       {/* Search & Filters Box */}
@@ -89,13 +99,19 @@ const ProcessDeactivation = () => {
             <select className="border rounded-lg p-2">
               <option>Bulk Action</option>
             </select>
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2"
-              onClick={handleStartProcess} // Added function call
-            >
-              <FaPlay /> Start Process
+            <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+              <FaPlay className="text-sm" />
+              Start Process
             </button>
-            <button className="bg-green-600 text-white px-4 py-2 rounded-lg">
+            <button 
+              className="bg-green-600 text-white px-4 py-2 rounded-lg"
+              onClick={() => navigate("/mark-as-completed", { 
+                state: { 
+                  selectedEmployees: employees,
+                  fromProcess: true 
+                } 
+              })}
+            >
               Mark as Completed
             </button>
           </div>
@@ -115,20 +131,20 @@ const ProcessDeactivation = () => {
           </thead>
           <tbody>
             {employees.map((emp) => (
-              <tr key={emp.id} className="border-t">
+              <tr key={emp._id} className="border-t">
                 <td className="p-2 flex items-center gap-2">
                   <img
                     src={emp.profilePic}
-                    alt={emp.name}
+                    alt={emp.fullName}
                     className="w-8 h-8 rounded-full"
                   />
                   <div>
-                    <div className="font-semibold">{emp.name}</div>
-                    <div className="text-sm text-gray-500">ID: {emp.id}</div>
+                    <div className="font-semibold">{emp.fullName}</div>
+                    <div className="text-sm text-gray-500">ID: {emp.employeeId}</div>
                   </div>
                 </td>
                 <td className="p-2 text-center">{emp.department}</td>
-                <td className="p-2 text-center">{emp.lastWorkingDate}</td>
+                <td className="p-2 text-center">{new Date(emp.joinDate).toLocaleDateString()}</td>
                 <td className="p-2 text-center">
                   <span
                     className={`px-2 py-1 rounded-lg text-white text-sm ${
@@ -174,7 +190,7 @@ const ProcessDeactivation = () => {
             "Building Access",
             "VPN Access",
             "Software Licenses",
-            "Company Assets",
+            "Company Assets"
           ].map((item, index) => (
             <div key={index} className="flex items-center gap-2">
               <input type="checkbox" className="w-4 h-4" />

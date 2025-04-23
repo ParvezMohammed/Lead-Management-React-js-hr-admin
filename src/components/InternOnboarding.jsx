@@ -9,10 +9,9 @@ import {
   FaRedo,
 } from "react-icons/fa";
 import { Navbar } from "./Navbar";
-
-// import * as Yup from "yup";
 import * as Yup from "yup";
 
+// Dummy data for recent onboarding
 const initialInterns = [
   {
     id: 1,
@@ -50,23 +49,12 @@ const initialInterns = [
 
 export default function ToggleButton() {
   const [selected, setSelected] = useState("Intern");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [interns, setInterns] = useState(initialInterns);
-  const [formData, setFormData] = useState({
-    fullName: "Prakash Sinha",
-    employeeId: "EMP001",
-    department: "Development",
-    position: "Intern Position",
-    email: "prakashsinha09@company.com",
-    contact: "+1(555)000-0000",
-    joinDate: "",
-    username: "intern.user",
-    password: "temp#Pass123",
-  });
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       fullName: "",
@@ -84,12 +72,34 @@ export default function ToggleButton() {
       employeeId: Yup.string().required("Required"),
       department: Yup.string().required("Required"),
       position: Yup.string().required("Required"),
-      email: Yup.string().required("Required"),
+      email: Yup.string().email("Invalid email").required("Required"),
       contact: Yup.string().required("Required"),
       joinDate: Yup.string().required("Required"),
     }),
-    onSubmit: (values) => {
-      console.log("Form Submitted:", values);
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        setLoading(true);
+        // Simulate API call delay
+        setTimeout(() => {
+          // Add new intern to the list
+          const newIntern = {
+            id: interns.length + 1,
+            name: values.fullName,
+            department: values.department,
+            joinDate: values.joinDate,
+            status: "Pending",
+            img: `https://randomuser.me/api/portraits/${Math.random() > 0.5 ? 'men' : 'women'}/${Math.floor(Math.random() * 10)}.jpg`,
+          };
+          
+          setInterns([newIntern, ...interns]);
+          setMessage("Intern onboarded successfully!");
+          resetForm();
+          setLoading(false);
+        }, 1000);
+      } catch (error) {
+        setMessage("Failed to onboard intern. Please try again.");
+        setLoading(false);
+      }
     },
   });
 
@@ -115,21 +125,8 @@ export default function ToggleButton() {
     );
   };
 
-   const handleReset = () => {
-    setFormData({
-      fullName: "",
-      employeeId: "",
-      department: "",
-      position: "",
-      email: "",
-      contact: "",
-      joinDate: "",
-      username: "",
-      password: "",
-    });
-  };
   return (
-    <div class="w-[100%] h-[100%]">
+    <div className="w-[100%] h-[100%]">
       {/* Header */}
       <div className="mb-8 rounded-lg">
         <Navbar heading="Intern Onboarding" />
@@ -175,6 +172,14 @@ export default function ToggleButton() {
           onSubmit={formik.handleSubmit}
           className="mt-5 p-4 border rounded-lg"
         >
+          {message && (
+            <div className={`p-3 mb-4 rounded-md ${
+              message.includes("successfully") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+            }`}>
+              {message}
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-3 w-full">
               <label htmlFor="fullName" className="block text-gray-700">

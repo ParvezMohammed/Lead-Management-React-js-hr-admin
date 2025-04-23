@@ -1,21 +1,42 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import axios from "axios";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
     if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
-      alert("Please enter a valid email address ⚠️");
+      setError("Please enter a valid email address ⚠️");
+      setIsLoading(false);
       return;
     }
-    alert(`OTP sent to ${email} ✅`);
-    
-    // Pass email to the EnterOTP page
-    navigate("/enter-otp", { state: { email } });
+
+    try {
+      const response = await axios.post(
+        'https://lead-management-admin-hr-panel.onrender.com/api/auth/forgot-password',
+        { email }
+      );
+
+      // Display success message from API
+      alert(response.data.message || "OTP sent successfully ✅");
+      
+      // Pass email to the EnterOTP page
+      navigate("/enter-otp", { state: { email } });
+    } catch (err) {
+      console.error('Forgot password error:', err);
+      setError(err.response?.data?.message || "Failed to send OTP. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -36,6 +57,12 @@ const ForgotPassword = () => {
           Enter your registered email address. We'll send you a code to reset your password.
         </p>
 
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md mb-4">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <label className="text-gray-500 text-xs mb-1 block">Email Address</label>
           <input
@@ -49,9 +76,10 @@ const ForgotPassword = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white py-3 rounded-md transition-all duration-200"
+            disabled={isLoading}
+            className="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white py-3 rounded-md transition-all duration-200 disabled:opacity-50"
           >
-            Send OTP
+            {isLoading ? "Sending OTP..." : "Send OTP"}
           </button>
         </form>
       </div>

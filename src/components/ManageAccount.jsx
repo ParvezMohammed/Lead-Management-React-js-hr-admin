@@ -13,58 +13,79 @@ const ManageAccount = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [showStatusForm, setShowStatusForm] = useState(false);
 
+  // Dummy stats data
+  const [stats] = useState({
+    activeCount: 45,
+    inactiveCount: 12,
+    pendingCount: 8,
+    newAccounts: 15
+  });
+
+  // Dummy employees data
   const [employees, setEmployees] = useState([
     {
-      id: "EMP003",
-      name: "Darlene Robertson",
+      id: "EMP001",
+      name: "John Smith",
       department: "Development",
-      lastActive: "2024-02-20 9:30 AM",
+      lastActive: "2024-03-15 09:30 AM",
       status: "Active",
-      avatar: "https://randomuser.me/api/portraits/women/3.jpg",
+      avatar: "https://randomuser.me/api/portraits/men/1.jpg"
     },
     {
-      id: "EMP006",
-      name: "Marvin McKinney",
+      id: "EMP002",
+      name: "Sarah Johnson",
       department: "Design",
-      lastActive: "2024-02-19 3:45 PM",
+      lastActive: "2024-03-14 02:15 PM",
       status: "Inactive",
-      avatar: "https://randomuser.me/api/portraits/men/6.jpg",
+      avatar: "https://randomuser.me/api/portraits/women/2.jpg"
     },
     {
-      id: "EMP007",
-      name: "Leslie Alexander",
+      id: "EMP003",
+      name: "Michael Brown",
       department: "Marketing",
-      lastActive: "2024-02-21 11:15 AM",
+      lastActive: "2024-03-15 11:45 AM",
       status: "Active",
-      avatar: "https://randomuser.me/api/portraits/women/2.jpg",
+      avatar: "https://randomuser.me/api/portraits/men/3.jpg"
     },
+    {
+      id: "EMP004",
+      name: "Emily Davis",
+      department: "Development",
+      lastActive: "2024-03-13 04:20 PM",
+      status: "Pending",
+      avatar: "https://randomuser.me/api/portraits/women/4.jpg"
+    }
   ]);
 
+  // Dummy recent activities data
   const [recentActivities, setRecentActivities] = useState([
     {
-      action: "Account Deactivated",
-      employee: "Marvin McKinney",
-      id: "EMP006",
-      date: "2024-02-19 15:45 PM",
-      reason: "Termination",
-      icon: <BsXCircleFill className="text-red-500 text-lg" />,
+      action: "Status Update",
+      employee: "Sarah Johnson",
+      id: "EMP002",
+      date: "2024-03-14 02:15 PM",
+      reason: "Account deactivated due to resignation",
+      modifiedBy: "Admin User",
+      icon: <BsXCircleFill className="text-red-500 text-lg" />
     },
     {
-      action: "Account Activated",
+      action: "Updated Profile",
       employee: "John Smith",
-      id: "EMP025",
-      date: "2024-01-12 11:20 AM",
-      reason: "New Employee Onboarding",
-      icon: <BsCheckCircleFill className="text-green-500 text-lg" />,
+      id: "EMP001",
+      date: "2024-03-15 09:30 AM",
+      reason: "Updated contact information",
+      modifiedBy: "Admin User",
+      icon: <BsExclamationCircleFill className="text-yellow-500 text-lg" />
     },
     {
-      action: "Account Suspended",
-      employee: "Michael Chen",
-      id: "EMP013",
-      date: "2024-11-02 12:42 PM",
-      reason: "Security Policy Violation",
-      icon: <BsExclamationCircleFill className="text-yellow-500 text-lg" />,
-    },
+      action: "Status Update",
+      employee: "Emily Davis",
+      id: "EMP004",
+      date: "2024-03-13 04:20 PM",
+      reason: "New employee onboarding",
+      modifiedBy: "Admin User",
+      icon: <BsCheckCircleFill className="text-green-500 text-lg" />
+    }
   ]);
 
   const handleBatchActivateProcess = () => {
@@ -88,12 +109,13 @@ const ManageAccount = () => {
       return;
     }
 
-    // Update employee status
+    // Update employee status locally
     const updatedEmployees = employees.map(emp => {
       if (emp.id === selectedEmployee.id) {
         return {
           ...emp,
-          status: reason === "activation" ? "Active" : "Inactive"
+          status: reason === "activation" ? "Active" : "Inactive",
+          lastActive: new Date().toLocaleString()
         };
       }
       return emp;
@@ -106,6 +128,7 @@ const ManageAccount = () => {
       id: selectedEmployee.id,
       date: new Date().toLocaleString(),
       reason: comments,
+      modifiedBy: "Admin User",
       icon: reason === "activation" 
         ? <BsCheckCircleFill className="text-green-500 text-lg" />
         : <BsXCircleFill className="text-red-500 text-lg" />
@@ -115,6 +138,8 @@ const ManageAccount = () => {
     setRecentActivities([newActivity, ...recentActivities]);
     setShowStatusForm(false);
     setSelectedEmployee(null);
+
+    alert("Employee status updated successfully");
   };
 
   const filteredEmployees = employees.filter(emp => {
@@ -134,36 +159,28 @@ const ManageAccount = () => {
           <MdPerson className="text-blue-500 text-3xl" />
           <div>
             <p className="text-gray-600">Active Accounts</p>
-            <p className="text-xl font-semibold">
-              {employees.filter(emp => emp.status === "Active").length}
-            </p>
+            <p className="text-xl font-semibold">{stats.activeCount}</p>
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md flex items-center space-x-4">
           <FaUserTimes className="text-red-500 text-3xl" />
           <div>
             <p className="text-gray-600">Inactive Accounts</p>
-            <p className="text-xl font-semibold">
-              {employees.filter(emp => emp.status === "Inactive").length}
-            </p>
+            <p className="text-xl font-semibold">{stats.inactiveCount}</p>
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md flex items-center space-x-4">
           <MdHourglassEmpty className="text-yellow-500 text-3xl" />
           <div>
             <p className="text-gray-600">Pending Action</p>
-            <p className="text-xl font-semibold">
-              {employees.filter(emp => emp.status === "Pending").length}
-            </p>
+            <p className="text-xl font-semibold">{stats.pendingCount}</p>
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md flex items-center space-x-4">
           <MdPersonAdd className="text-green-500 text-3xl" />
           <div>
             <p className="text-gray-600">New Accounts (30d)</p>
-            <p className="text-xl font-semibold">
-              {employees.length}
-            </p>
+            <p className="text-xl font-semibold">{stats.newAccounts}</p>
           </div>
         </div>
       </div>
@@ -246,6 +263,8 @@ const ManageAccount = () => {
                       className={`px-2 py-1 rounded-md ${
                         emp.status === "Active"
                           ? "bg-green-200 text-green-800"
+                          : emp.status === "Pending"
+                          ? "bg-yellow-200 text-yellow-800"
                           : "bg-red-200 text-red-800"
                       }`}
                     >

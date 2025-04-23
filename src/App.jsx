@@ -5,7 +5,7 @@ import ManageAccount from "./components/ManageAccount";
 import ManageAccountActivation from "./components/ManageAccountActivation";
 import ManageAccountDeactivation from "./components/ManageAccountDeactivation";
 import ProcessDeactivation from "./components/ProcessDeactivation";
-import EmployeeDeactivation from "./components/EmployeeDeactivation";
+import MarkAsCompleted from "./components/MarkAsCompleted";
 import ManageWork from "./components/ManageWork";
 import Notification from "./components/Notification";
 import Login from "./components/Login";
@@ -17,6 +17,7 @@ import "./App.css";
 import SeniorOnboarding from "./components/SeniorOnboarding";
 import InternOnboarding from "./components/InternOnboarding";
 import Setting from "./components/Settings";
+import Profile from "./components/Profile";
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   // Check if user is logged in from either localStorage or sessionStorage
@@ -97,10 +98,10 @@ function App() {
         </ProtectedRoute>
       } />
       
-      <Route path="/employee-deactivation" element={
+      <Route path="/mark-as-completed" element={
         <ProtectedRoute>
           <DashboardLayout>
-            <EmployeeDeactivation />
+            <MarkAsCompleted />
           </DashboardLayout>
         </ProtectedRoute>
       } />
@@ -117,6 +118,13 @@ function App() {
         <ProtectedRoute>
           <DashboardLayout>
             <Notification />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <Profile />
           </DashboardLayout>
         </ProtectedRoute>
       } />

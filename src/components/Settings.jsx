@@ -2,17 +2,31 @@ import { useState } from "react";
 import { Navbar } from "./Navbar";
 
 const Settings = () => {
-  const [language, setLanguage] = useState("English");
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
-  const [pushNotificationsEnabled, setPushNotificationsEnabled] = useState(true);
-  const [desktopNotificationsEnabled, setDesktopNotificationsEnabled] = useState(true);
-  const [emailNotificationsEnabled, setEmailNotificationsEnabled] = useState(true);
+  const [settings, setSettings] = useState({
+    language: "English",
+    twoFactorAuth: true,
+    mobilePushNotifications: true,
+    desktopNotifications: true,
+    emailNotifications: true
+  });
+
+  const handleSettingChange = (setting, value) => {
+    // Update local state immediately
+    const updatedSettings = {
+      ...settings,
+      [setting]: value
+    };
+    setSettings(updatedSettings);
+    
+    // Show success message
+    alert('Setting updated successfully');
+  };
 
   return (
     <div>
       {/* Header */}
       <div className="mb-8">
-      <Navbar heading="Settings" />
+        <Navbar heading="Settings" />
       </div>
 
       {/* Main Content Box */}
@@ -22,12 +36,12 @@ const Settings = () => {
             {/* Language Selection */}
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-lg font-medium">Language</h3>
+                <h3 className="text-lg mr-12 font-medium">Language</h3>
                 <p className="text-gray-500 text-sm mt-1">Select your language</p>
               </div>
               <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
+                value={settings.language}
+                onChange={(e) => handleSettingChange('language', e.target.value)}
                 className="bg-gray-100 rounded-md px-4 py-2 w-[150px]"
               >
                 <option>English</option>
@@ -41,10 +55,13 @@ const Settings = () => {
             {/* Two-factor Authentication */}
             <div className="flex items-center justify-between py-6">
               <div>
-                <h3 className="text-lg font-medium">Two-factor Authentication</h3>
+                <h3 className="text-lg mr-[115px] font-medium">Two-factor Authentication</h3>
                 <p className="text-gray-500 text-sm mt-1">Keep your account secure by enabling 2FA via mail</p>
               </div>
-              <Toggle enabled={twoFactorEnabled} onChange={() => setTwoFactorEnabled(!twoFactorEnabled)} />
+              <Toggle 
+                enabled={settings.twoFactorAuth} 
+                onChange={() => handleSettingChange('twoFactorAuth', !settings.twoFactorAuth)} 
+              />
             </div>
             <div className="border-t border-gray-200"></div>
 
@@ -52,19 +69,25 @@ const Settings = () => {
             <div className="flex items-center justify-between py-6">
               <div>
                 <h3 className="text-lg font-medium">Mobile Push Notifications</h3>
-                <p className="text-gray-500 text-sm mt-1">Receive push notification</p>
+                <p className="text-gray-500 mr-[40px] text-sm mt-1">Receive push notification</p>
               </div>
-              <Toggle enabled={pushNotificationsEnabled} onChange={() => setPushNotificationsEnabled(!pushNotificationsEnabled)} />
+              <Toggle 
+                enabled={settings.mobilePushNotifications} 
+                onChange={() => handleSettingChange('mobilePushNotifications', !settings.mobilePushNotifications)} 
+              />
             </div>
             <div className="border-t border-gray-200"></div>
 
             {/* Desktop Notifications */}
             <div className="flex items-center justify-between py-6">
               <div>
-                <h3 className="text-lg font-medium">Desktop Notification</h3>
+                <h3 className="text-lg mr-12 font-medium">Desktop Notification</h3>
                 <p className="text-gray-500 text-sm mt-1">Receive push notification in desktop</p>
               </div>
-              <Toggle enabled={desktopNotificationsEnabled} onChange={() => setDesktopNotificationsEnabled(!desktopNotificationsEnabled)} />
+              <Toggle 
+                enabled={settings.desktopNotifications} 
+                onChange={() => handleSettingChange('desktopNotifications', !settings.desktopNotifications)} 
+              />
             </div>
             <div className="border-t border-gray-200"></div>
 
@@ -74,7 +97,10 @@ const Settings = () => {
                 <h3 className="text-lg font-medium">Email Notifications</h3>
                 <p className="text-gray-500 text-sm mt-1">Receive email notification</p>
               </div>
-              <Toggle enabled={emailNotificationsEnabled} onChange={() => setEmailNotificationsEnabled(!emailNotificationsEnabled)} />
+              <Toggle 
+                enabled={settings.emailNotifications} 
+                onChange={() => handleSettingChange('emailNotifications', !settings.emailNotifications)} 
+              />
             </div>
           </div>
         </div>

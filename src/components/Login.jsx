@@ -8,43 +8,46 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     // Basic validation
     if (!email.trim() || !password.trim()) {
       setError("Please fill in all fields");
+      setIsLoading(false);
       return;
     }
 
-    // Here you would typically make an API call to verify credentials
-    // For demo purposes, we'll use a simple check
-    if (email && password) {
-      // Store auth data
+    // Simulate API call delay
+    setTimeout(() => {
+      // Accept any email and password combination
       const userData = {
-        email,
-        name: "Rashmika", // This would come from API
-        role: "HR Admin", // This would come from API
-        token: "demo-token", // This would come from API
+        email: email,
+        name: email.split('@')[0], // Use part before @ as name
+        role: "Admin",
+        profilePhoto: null
       };
 
-      // Store user info if remember me is checked or it's a successful login
+      // Store user info based on remember me preference
       if (rememberMe) {
-        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userEmail', userData.email);
         localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem('token', 'dummy-token');
       } else {
-        sessionStorage.setItem('userEmail', email);
+        sessionStorage.setItem('userEmail', userData.email);
         sessionStorage.setItem('userData', JSON.stringify(userData));
+        sessionStorage.setItem('token', 'dummy-token');
       }
       
       // Navigate to dashboard
       navigate('/');
-    } else {
-      setError("Invalid credentials");
-    }
+      setIsLoading(false);
+    }, 1000); // Simulate 1 second delay
   };
 
   return (
@@ -52,7 +55,7 @@ const Login = () => {
       {/* Left Section */}
       <div className="w-1/2 bg-white p-12 flex flex-col justify-center items-center">
         <div className="flex items-center gap-2 mb-10">
-          <img src="/src/assets/hrms-logo.svg" alt="HRMS Logo" className="w-8 h-8" />
+          <img src="/src/assets/hrms-logo.png" alt="HRMS Logo" className="w-8 h-8 rounded-full" />
           <span className="text-xl font-bold">HRMS</span>
         </div>
 
@@ -96,7 +99,7 @@ const Login = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="rashmika02@example.com"
+                placeholder="Enter your email"
                 className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 required
               />
@@ -111,7 +114,7 @@ const Login = () => {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Enter your password"
                 className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all pr-10"
                 required
               />
@@ -146,9 +149,10 @@ const Login = () => {
             {/* Login Button */}
             <button
               type="submit"
-              className="w-full bg-[#3b82f6] text-white py-3 rounded-lg hover:bg-[#2563eb] transition-all duration-200"
+              disabled={isLoading}
+              className="w-full bg-[#3b82f6] text-white py-3 rounded-lg hover:bg-[#2563eb] transition-all duration-200 disabled:opacity-50"
             >
-              Login
+              {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>
         </div>
